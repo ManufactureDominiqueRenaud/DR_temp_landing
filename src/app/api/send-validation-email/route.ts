@@ -11,14 +11,14 @@ export async function POST(request: Request) {
 
     if (!email || !serial) {
       return Response.json(
-        { error: "Email et numéro de série sont requis" },
+        { error: "Valid Email & Serial Number are required" },
         { status: 400 }
       );
     }
 
     const { data, error } = await resend.emails.send({
       from: "Manufacture Dominique Renaud <no-reply@warranty.dominiquerenaud.com>",
-      to: ["godigital@vendetta-films.com"],
+      to: ["info@dominiquerenaud.com"],
       subject: "Une nouvelle demande de garantie a été enregistrée !",
       react: EmailVerificationTemplate({ email, serial }),
     });
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     if (error) {
       console.error("Error sending email (brut):", error);
       return Response.json(
-        { error: error?.message || "Erreur d'envoi", raw: error },
+        { error: error?.message || "Sending Error", raw: error },
         { status: 500 }
       );
     }
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
     return Response.json(
       {
-        error: error?.message || "Une erreur interne est survenue.",
+        error: error?.message || "An internal error has occurred.",
         details: error,
       },
       { status: 500 }

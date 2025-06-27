@@ -20,12 +20,12 @@ import { LucideLoader2, LucideX } from "lucide-react";
 
 export default function WarrantyForm() {
   const formSchema = z.object({
-    email: z.string().email("Veuillez entrer une adresse e-mail valide."),
+    email: z.string().email("Please enter a valid email adress."),
     serialCode: z
       .string()
-      .min(1, "Le numéro de série est requis.")
-      .min(5, "Le numéro de série doit comporter au moins 5 caractères.")
-      .max(5, "Le numéro de série ne doit pas dépasser 5 caractères."),
+      .min(1, "Serial Number is required.")
+      .min(5, "The Serial Number is at least 5 digits.")
+      .max(5, "The Serial Number is 5 digits maximum."),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -56,22 +56,22 @@ export default function WarrantyForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Une erreur est survenue.");
+        throw new Error(data.error || "An internal error occured.");
       }
 
       toast.custom((t) => (
         <div className="bg-[#252426] text-white p-4  border-2 border-white relative">
-          <h1 className="text-[#AAEBBB]">Informations envoyées !</h1>
+          <h1 className="text-[#AAEBBB]">Information sent!</h1>
           <p className="text-sm">
-            Merci pour votre inscription à la garantie internationale.
+            Thank you for registering for the international warranty.
           </p>
           <p className="text-sm">
-            Vous recevrez un e-mail de confirmation à l’adresse{" "}
-            <span className="font-semibold">{values.email}</span> avec les
-            détails de votre demande.
+            You will receive a confirmation email at{" "}
+            <span className="font-semibold">{values.email}</span> with the
+            details of your request.
           </p>
           <p className="text-sm">
-            Numéro de série lié :{" "}
+            Linked serial number :{" "}
             <span className="font-semibold">{values.serialCode}</span>
           </p>
           <button
@@ -86,14 +86,14 @@ export default function WarrantyForm() {
       reset(); // <-- réinitialise les champs
     } catch (error: any) {
       console.error(
-        "Erreur lors de l'envoi du formulaire :",
+        "Form was not sended, there is an error :",
         JSON.stringify(error, null, 2)
       );
 
       if (error instanceof Error) {
-        toast.error(`Erreur lors de l'envoi : ${error.message}`);
+        toast.error(`Error during sending : ${error.message}`);
       } else {
-        toast.error("Erreur inconnue lors de l'envoi.");
+        toast.error("Unknown Error during sending.");
       }
     }
   }
