@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import WarrantyForm from "./warranty-form";
 import Image from "next/image";
 import Link from "next/link";
+import EmailVerificationTemplate from "@/components/email/email-validation";
 
 export default function Page() {
   return (
@@ -44,6 +45,7 @@ export default function Page() {
           </ul>
         </nav>
       </footer>
+      <EmailVerificationTemplate email="fred.florkowks" serial="123" />
     </main>
   );
 }

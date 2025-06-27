@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { LucideX } from "lucide-react";
+import { LucideLoader2, LucideX } from "lucide-react";
 
 export default function WarrantyForm() {
   const formSchema = z.object({
@@ -35,23 +35,67 @@ export default function WarrantyForm() {
       serialCode: "",
     },
   });
+  const {
+    formState: { isSubmitting },
+    reset,
+  } = form;
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    alert(
-      JSON.stringify(values) +
-        "\n\nDéveloppement de l'envoi du mail à intégrer une fois les infos reçues !"
-    );
-    toast.custom((t) => (
-      <div className="bg-[#252426] text-[#AAEBBB] p-4  border-2 border-white relative">
-        <h1>Informations sent!</h1>
-        <p className="text-xs text-white">We will contact you personally to confirm the extension of your international warranty.</p>
-        <button onClick={() => toast.dismiss(t)} className="absolute top-0 right-0 p-1 bg-white">
-          <LucideX className="w-4 h-4 text-[#252426]" />
-        </button>
-      </div>
-    ));
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await fetch("/api/send-validation-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: values.email,
+          serial: values.serialCode,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Une erreur est survenue.");
+      }
+
+      toast.custom((t) => (
+        <div className="bg-[#252426] text-white p-4  border-2 border-white relative">
+          <h1 className="text-[#AAEBBB]">Informations envoyées !</h1>
+          <p className="text-sm">
+            Merci pour votre inscription à la garantie internationale.
+          </p>
+          <p className="text-sm">
+            Vous recevrez un e-mail de confirmation à l’adresse{" "}
+            <span className="font-semibold">{values.email}</span> avec les
+            détails de votre demande.
+          </p>
+          <p className="text-sm">
+            Numéro de série lié :{" "}
+            <span className="font-semibold">{values.serialCode}</span>
+          </p>
+          <button
+            onClick={() => toast.dismiss(t)}
+            className="absolute top-0 right-0 p-1 bg-white"
+          >
+            <LucideX className="w-4 h-4 text-[#252426]" />
+          </button>
+        </div>
+      ));
+
+      reset(); // <-- réinitialise les champs
+    } catch (error: any) {
+      console.error(
+        "Erreur lors de l'envoi du formulaire :",
+        JSON.stringify(error, null, 2)
+      );
+
+      if (error instanceof Error) {
+        toast.error(`Erreur lors de l'envoi : ${error.message}`);
+      } else {
+        toast.error("Erreur inconnue lors de l'envoi.");
+      }
+    }
   }
 
   return (
@@ -86,6 +130,7 @@ export default function WarrantyForm() {
                     <Input
                       placeholder="abcd@email.com"
                       {...field}
+                      disabled={isSubmitting}
                       className="w-full"
                     />
                   </FormControl>
@@ -101,9 +146,14 @@ export default function WarrantyForm() {
               name="serialCode"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel>Numéro de série</FormLabel>
+                  <FormLabel>Serial Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="XXXXX" {...field} className="w-full" />
+                    <Input
+                      placeholder="XXXXX"
+                      disabled={isSubmitting}
+                      {...field}
+                      className="w-full"
+                    />
                   </FormControl>
                   <FormDescription className="text-xs text-white/30">
                     Please enter your watch’s serial number.
@@ -114,8 +164,19 @@ export default function WarrantyForm() {
             />
           </div>
           <p className="mt-4 mb-2">Thanks !</p>
-          <Button type="submit" className="w-1/4">
-            Submit
+          <Button
+            type="submit"
+            className="w-1/4 flex items-center justify-center gap-2"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <LucideLoader2 className="animate-spin h-4 w-4" />
+                Submitting form...
+              </>
+            ) : (
+              "Submit"
+            )}
           </Button>
         </form>
       </Form>
