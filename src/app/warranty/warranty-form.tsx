@@ -113,7 +113,7 @@ export default function WarrantyForm() {
         Please enter your email address and the serial number found on your
         warranty card or on the back of your watch.
         <br />
-        We will contact you personally to confirm the extension of your
+        We will contact you personally to confirm the 3-year extension of your
         international warranty.
       </p>
 

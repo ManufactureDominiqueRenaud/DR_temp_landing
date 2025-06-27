@@ -45,7 +45,6 @@ export default function Page() {
           </ul>
         </nav>
       </footer>
-      <EmailVerificationTemplate email="fred.florkowks" serial="123" />
     </main>
   );
 }
