@@ -2,6 +2,18 @@ import { cn } from "@/lib/utils";
 import WarrantyForm from "./warranty-form";
 import Image from "next/image";
 import Link from "next/link";
+import { Metadata } from "next";
+
+//PAGE METADTA
+export const metadata: Metadata = {
+  title: "Manufacture Dominique Renaud | International Warranty Registration",
+  description:
+    "Register your Dominique Renaud watch for international warranty coverage.",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function Page() {
   return (
@@ -9,7 +21,7 @@ export default function Page() {
       className={cn(
         "flex flex-col items-center",
         "min-h-screen w-screen",
-        "bg-gray-100",
+        "bg-gray-100"
       )}
     >
       <header className="w-full flex items-center justify-center md:justify-start pt-4 pb-8">
