@@ -17,8 +17,8 @@ export async function POST(request: Request) {
     }
 
     const { data, error } = await resend.emails.send({
-      from: "Manufacture Dominique Renaud <no-reply@warranty.dominiquerenaud.com>",
-      to: ["info@dominiquerenaud.com"],
+      from: "Manufacture Dominique Renaud <noreply@warranty.dominiquerenaud.com>",
+      to: ["conciergerie@dominiquerenaud.ch"],
       subject: "Une nouvelle demande de garantie a été enregistrée !",
       react: EmailVerificationTemplate({ email, serial }),
     });
